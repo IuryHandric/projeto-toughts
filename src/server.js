@@ -21,6 +21,7 @@ const User = require('./models/User')
 // Rotas
 
 const toughtsRoutes = require('./routes/toughts.Routes');
+const authRoutes = require('./routes/auth.Routes');
 
 // Controllers
 
@@ -79,6 +80,7 @@ app.use((req, res, next) => {
 
 // Utilizando as rotas
 app.use('/toughts', toughtsRoutes);
+app.use('/', authRoutes);
 
 // Utilizando o controller para rendereizar no diretório '/'
 app.get('/', ToughtController.showToughts)
