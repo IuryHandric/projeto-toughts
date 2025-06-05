@@ -4,8 +4,12 @@ const session = require('express-session');
 // Para salvar as sessões dentro da pasta sessions
 const FileStore = require('session-file-store')(session)
 const flash = require('express-flash')
+const path = require('path')
 
 const app = express();
+
+// Path para encontrar views (necessário pois os meus arquivos estão em src)
+app.set('views', path.join(__dirname, 'views'))
 
 const conn = require('./db/conn')
 
@@ -13,6 +17,14 @@ const conn = require('./db/conn')
 
 const Tought = require('./models/Tought')
 const User = require('./models/User')
+
+// Rotas
+
+const toughtsRoutes = require('./routes/toughts.Routes');
+
+// Controllers
+
+const ToughtController = require('./controllers/ToughtController');
 
 // Template engine
 app.engine('handlebars', exphbs.engine())
@@ -62,10 +74,14 @@ app.use((req, res, next) => {
     if(req.session.userId) {
         res.locals.session = req.session
     }
-
     next();
-
 })
+
+// Utilizando as rotas
+app.use('/toughts', toughtsRoutes);
+
+// Utilizando o controller para rendereizar no diretório '/'
+app.get('/', ToughtController.showToughts)
 
 const port = process.env.DB_PORT || 3000
 conn
