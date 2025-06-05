@@ -9,6 +9,11 @@ const app = express();
 
 const conn = require('./db/conn')
 
+// Models
+
+const Tought = require('./models/Tought')
+const User = require('./models/User')
+
 // Template engine
 app.engine('handlebars', exphbs.engine())
 app.set('view engine', 'handlebars')
@@ -64,6 +69,7 @@ app.use((req, res, next) => {
 
 const port = process.env.DB_PORT || 3000
 conn
+    // .sync({force: true})
     .sync()
     .then(() => {
         app.listen(port, () => {
