@@ -51,8 +51,8 @@ module.exports = class AuthController {
             req.session.userId = createdUser.id
             req.flash('message', 'Usuário cadastrado com sucesso!')
             req.session.save(() => {
+                res.redirect('/')
             })
-            res.redirect('/')
             console.log(`Usuário ${name}, cadastrado com sucesso!`)     
         } catch (e) {
             console.log('Erro ao enviar', e)
@@ -62,6 +62,38 @@ module.exports = class AuthController {
     static logout(req, res) {
         req.session.destroy();
         res.redirect('/login')
+    }
+
+    static async loginPost(req, res) {
+
+        const {email, password} = req.body
+
+        // Verificando se o usuário existe
+
+        const user = await User.findOne({where: {email: email}})
+
+        if(!user) {
+            req.flash('message', 'Usuário não encontrado!')
+            res.render('auth/login')
+        }
+        // Checando se a senha pertence ao usuário
+       
+        const passwordMatch = bcrypt.compareSync(password, user.password)
+
+        if(!passwordMatch) {
+            req.flash('message', 'Senha incorreta!')
+            res.render('auth/login')
+            return
+        }
+
+        // Inicializando a sessão
+
+            // Inicializando a sessão
+            req.session.userId = user.id
+            req.flash('message', 'Autenticação realizada com sucesso!')
+            req.session.save(() => {
+                res.redirect('/');
+            })
     }
     
 }
