@@ -48,6 +48,19 @@
     padding: 2em;
 }
 
+/* MESSAGES */
+
+.message {
+    padding: 1em;
+    color: #004085;
+    background-color: #cce5ff;
+    border: 1px solid #b8daff;
+    border-radius: 5px;
+    text-align: center;
+    margin: 0 auto 2em;
+    max-width: 60%;
+}
+
 /* LOGIN E REGISTER */
 
 .auth-container {
@@ -68,7 +81,6 @@
 .auth-container a {
     color: #f6982d;
 }
-
 
 .form-control {
     display: flex;
@@ -108,8 +120,6 @@ form input[type='submit']:hover,
     background-color: #f6982d;
     color: #fff;
 }
-
-
 
 /* FOOTER */
 
