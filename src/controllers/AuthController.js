@@ -57,7 +57,11 @@ module.exports = class AuthController {
         } catch (e) {
             console.log('Erro ao enviar', e)
         }
-
-
     }
+
+    static logout(req, res) {
+        req.session.destroy();
+        res.redirect('/login')
+    }
+
 }
