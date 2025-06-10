@@ -4,7 +4,14 @@ const User = require('../models/User')
 
 module.exports = class ToughtController {
     static async showToughts(req, res) {
-        await res.render('toughts/home')
+
+        const toughtData = await Tought.findAll({
+            include: User
+        })
+
+        const toughts = toughtData.map((result) => result.get({ plain: true }))
+
+        await res.render('toughts/home', { toughts })
     }
 
     static async dashboard(req, res) {
