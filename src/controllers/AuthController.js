@@ -74,7 +74,7 @@ module.exports = class AuthController {
 
         if(!user) {
             req.flash('message', 'Usuário não encontrado!')
-            res.render('auth/login')
+            return res.render('auth/login')
         }
         // Checando se a senha pertence ao usuário
        
@@ -82,8 +82,7 @@ module.exports = class AuthController {
 
         if(!passwordMatch) {
             req.flash('message', 'Senha incorreta!')
-            res.render('auth/login')
-            return
+            return res.render('auth/login')
         }
 
         // Inicializando a sessão
@@ -92,7 +91,7 @@ module.exports = class AuthController {
             req.session.userId = user.id
             req.flash('message', 'Autenticação realizada com sucesso!')
             req.session.save(() => {
-                res.redirect('/');
+                return res.redirect('/');
             })
     }
     
