@@ -8,6 +8,7 @@ const ToughtController = require('../controllers/ToughtController')
 // Helpers Middlewares
 const checkAuth = require('../../helpers/auth').checkAuth
 
+router.get('/add', checkAuth, ToughtController.createTought)
 router.get('/dashboard',checkAuth, ToughtController.dashboard) // Utilizando o middleware dentro da função
 router.get('/', ToughtController.showToughts)
 
