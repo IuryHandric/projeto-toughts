@@ -13,23 +13,28 @@ module.exports = class ToughtController {
 
         const user = await User.findOne({
             where: {
-                id: userId},
-                // Se trouxer o usuário, aqui dessa forma eu trago todos os pensamentos dele com o include
-                include: Tought,
-                // plain para trazer os melhores dados para manipulação
-                plain: true
+                id: userId
+            },
+            // Se trouxer o usuário, aqui dessa forma eu trago todos os pensamentos dele com o include
+            include: Tought,
+            // plain para trazer os melhores dados para manipulação
+            plain: true
         })
 
         // Verificando se Usuário existe
-        if(!user) {
+        if (!user) {
             res.redirect('/login')
         }
         // Map no array para utilização apenas dos valores necessários
         const toughts = user.Toughts.map((result) => result.dataValues)
 
-        console.log(toughts)
+        let emptyToughts = false
 
-        res.render('toughts/dashboard', {toughts})
+        if (toughts.length === 0) {
+            emptyToughts = true
+        }
+
+        res.render('toughts/dashboard', { toughts, emptyToughts })
     }
 
     static createTought(req, res) {
@@ -56,11 +61,28 @@ module.exports = class ToughtController {
             req.flash('message', 'Pensamento criado com sucesso!')
 
             req.session.save(() => {
-                res.redirect('/toughts/dashboard')
+                return res.redirect('/toughts/dashboard')
             })
 
         } catch (e) {
             console.log('Verificar erro', e)
+        }
+
+    }
+    // Removendo pensamento
+    static async removeTought(req, res) {
+        const id = req.body.id
+        const UserId = req.session.userId
+
+        try {
+            await Tought.destroy({ where: { id: id, UserId: UserId } })
+            req.flash('message', 'Pensamento criado com sucesso!')
+
+            req.session.save(() => {
+                return res.redirect('/toughts/dashboard')
+            })
+        } catch (e) {
+            console.log('Erro ao apagar registro', e)
         }
 
     }
