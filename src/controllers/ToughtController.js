@@ -15,12 +15,21 @@ module.exports = class ToughtController {
             search = req.query.search
         }
 
+        let order = 'DESC'
+
+        if(req.query.order === 'old') {
+            order = 'ASC'
+        } else {
+            order = 'DESC'
+        }
+
         const toughtData = await Tought.findAll({
             include: User,
             // Criando a função para filtrar a partir do search dentro de %% informa que não importa se tem conteúdo antes ou depois, ele vai trazer os dados que possuem o que foi escrito pelo usuária
             where: {
                 title:  {[Op.like]: `%${search}%`}
-            }
+            },
+            order: [['createdAt', order]]
         })
 
         const toughts = toughtData.map((result) => result.get({ plain: true }))
