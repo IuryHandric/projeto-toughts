@@ -2,16 +2,38 @@ const Tought = require('../models/Tought')
 const User = require('../models/User')
 
 
+// Criando operador para buscar no sql por like
+const {Op} = require('sequelize')
+
+
 module.exports = class ToughtController {
     static async showToughts(req, res) {
 
+        let search = ''
+
+        if(req.query.search) {
+            search = req.query.search
+        }
+
         const toughtData = await Tought.findAll({
-            include: User
+            include: User,
+            // Criando a função para filtrar a partir do search dentro de %% informa que não importa se tem conteúdo antes ou depois, ele vai trazer os dados que possuem o que foi escrito pelo usuária
+            where: {
+                title:  {[Op.like]: `%${search}%`}
+            }
         })
 
         const toughts = toughtData.map((result) => result.get({ plain: true }))
 
-        await res.render('toughts/home', { toughts })
+        // Contando quantos pensamentos foram encontrados pela busca
+
+        let toughtsQty = toughts.length
+
+        if(toughtsQty === 0) {
+            toughtsQty = false
+        }
+
+        await res.render('toughts/home', { toughts, search, toughtsQty })
     }
 
     static async dashboard(req, res) {
